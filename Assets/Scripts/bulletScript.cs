@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class bulletScript : MonoBehaviour {
-	
+	public int boundsX;
+	public int boundsZ;
 	public float bulletSpeed;
 	
 	// Use this for initialization
@@ -19,10 +20,8 @@ public class bulletScript : MonoBehaviour {
 		
 		transform.Translate (Vector3.forward * amtToMove);
 		
-		//Destroys bullets if it goes off screen
-		//**REMINDER**
-		//Please code for all edges once we get directional bullets
-		if (transform.position.z >= 7)
+		//Destroys bullets if it goes out of bounds
+		if (Mathf.Abs(transform.position.z) > boundsZ || Mathf.Abs (transform.position.x) > boundX)
 		{
 			Destroy(gameObject);
 		}
