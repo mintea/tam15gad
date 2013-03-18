@@ -17,7 +17,7 @@ public class WeaponScript : MonoBehaviour {
 		myTransform = transform;
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
 		myTransform.parent = player.transform;
-		//InvokeRepeating("Shoot",1,0.5f);
+		//InvokeRepeating("Shoot",1,0.5f); // Can use for Autoshooting
 		maxDistance = 2;
 	}
 	
