@@ -5,6 +5,8 @@ public class playerScript : MonoBehaviour
 {
 	
 	public float playerSpeed;
+	public float hitTimer;
+	public const float invincibleTime = 2;
 	public Rigidbody bullet;
 	public Transform deathExplosion;
 	public int playerLives;
@@ -12,7 +14,7 @@ public class playerScript : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		
+		hitTimer = 0;
 	}
 	
 	// Update is called once per frame
@@ -48,12 +50,15 @@ public class playerScript : MonoBehaviour
 	{
 		if (enemy.gameObject.tag == "enemy")
 		{
-			Transform tempExplosion;
-			
-			//Creates an explosion when enemy touches player.
-			tempExplosion = Instantiate (deathExplosion, transform.position, transform.rotation) as Transform;
-			
-			playerLives--;
+			if (Time.time > hitTimer) {
+				Transform tempExplosion;
+				
+				//Creates an explosion when enemy touches player.
+				tempExplosion = Instantiate (deathExplosion, transform.position, transform.rotation) as Transform;
+				
+				playerLives--;
+				hitTimer = Time.time + invincibleTime;
+			}
 		}
 	}
 }
