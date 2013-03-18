@@ -21,7 +21,7 @@ public class bulletScript : MonoBehaviour {
 		transform.Translate (Vector3.forward * amtToMove);
 		
 		//Destroys bullets if it goes out of bounds
-		if (Mathf.Abs(transform.position.z) > boundsZ || Mathf.Abs (transform.position.x) > boundX)
+		if (Mathf.Abs(transform.position.z) > boundsZ || Mathf.Abs (transform.position.x) > boundsX)
 		{
 			Destroy(gameObject);
 		}
