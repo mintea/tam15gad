@@ -35,12 +35,6 @@ public class playerScript : MonoBehaviour
 			
 			tempBullet = Instantiate(bullet, transform.position, transform.rotation) as Rigidbody;
 		}
-		
-		if (playerLives == 0)
-		{
-			Destroy (gameObject);
-			Application.LoadLevel(1);
-		}
 	}
 	
 	//Need to figure out how to destroy the game object while keeping the player lives intact
@@ -57,8 +51,13 @@ public class playerScript : MonoBehaviour
 				tempExplosion = Instantiate (deathExplosion, transform.position, transform.rotation) as Transform;
 				
 				playerLives--;
-				hitTimer = Time.time + invincibleTime;
-				StartCoroutine (BlinkPlayer(2));
+				if (playerLives>0){
+					hitTimer = Time.time + invincibleTime;
+					StartCoroutine (BlinkPlayer(2));
+				}
+				else {
+					StartCoroutine (WaitAndDestroyPlayer(1));
+				}
 			}
 		}
 	}
@@ -70,5 +69,17 @@ public class playerScript : MonoBehaviour
 			renderer.enabled = !renderer.enabled;
 		}
 		renderer.enabled = true; // when done blinking make sure player is shown
+	}
+	
+	IEnumerator WaitAndDestroyPlayer(float waitTime) {
+		renderer.enabled = false;
+		playerSpeed = 0;
+		float endTime = Time.time + waitTime;
+		while (Time.time < endTime){
+			yield return 0;
+		}
+		Destroy (gameObject);
+		Application.LoadLevel(1);
+		
 	}
 }
