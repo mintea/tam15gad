@@ -58,7 +58,17 @@ public class playerScript : MonoBehaviour
 				
 				playerLives--;
 				hitTimer = Time.time + invincibleTime;
+				StartCoroutine (BlinkPlayer(2));
 			}
 		}
+	}
+	
+	IEnumerator BlinkPlayer(float blinkTime) {
+		float endTime = Time.time + blinkTime;
+		while (Time.time < endTime) {
+			yield return new WaitForSeconds(0.2f);
+			renderer.enabled = !renderer.enabled;
+		}
+		renderer.enabled = true; // when done blinking make sure player is shown
 	}
 }
