@@ -6,4 +6,12 @@
 *.csproj
 *.unityproj
 *.sln
+
+# MonoDevelop Files
+*.usertasks
 *.userprefs
+
+## Project Files
+*.pidb
+*.resources
+test-results/
