@@ -3,7 +3,6 @@ using System.Collections;
 
 public class WeaponScript : MonoBehaviour {
 	public int maxDistance;
-	public int moveSpeed;
 	public int rotationSpeed;
 	public Rigidbody bullet;
 	public float rotationDamping = 20f;
@@ -13,7 +12,10 @@ public class WeaponScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		maxDistance = 0; // not used
+		rotationSpeed = 10;
 		attackTimer = 0;
+		
 		myTransform = transform;
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
 		myTransform.parent = player.transform;
@@ -27,7 +29,7 @@ public class WeaponScript : MonoBehaviour {
 		float z = Input.GetAxis ("VerticalFire");
 		
 		Vector3 inputVec = new Vector3(x, 0, z);
-		inputVec *= moveSpeed;
+		inputVec *= rotationSpeed;
 		
 		if (inputVec != Vector3.zero)
             transform.rotation = Quaternion.Slerp(transform.rotation, 

@@ -9,6 +9,7 @@ public class enemyScript : MonoBehaviour
 	public int rotationSpeed;
 	public int maxDistance;
 	public Transform enemyDeathAnimation;
+	public int health;
 	
 	private Transform myTransform;
 	// Use this for initialization
@@ -20,10 +21,13 @@ public class enemyScript : MonoBehaviour
 	
 	void Start () 
 	{
+		moveSpeed = 5;
+		rotationSpeed = 10;
+		health = 5;
 		GameObject go = GameObject.FindGameObjectWithTag("Player");
 		
 		target = go.transform;
-		maxDistance = 2;
+		maxDistance = 2; // not used yet
 	}
 	
 	// Update is called once per frame
@@ -42,10 +46,13 @@ public class enemyScript : MonoBehaviour
 	{
 		if (playerProjectile.gameObject.tag == "playerProjectile")
 		{
-			Transform tempExplosion;
-			
-			tempExplosion = Instantiate (enemyDeathAnimation, transform.position, transform.rotation) as Transform;
-			Destroy (gameObject);
+			health--;
+			if (health <= 0){
+				Transform tempExplosion;
+				
+				tempExplosion = Instantiate (enemyDeathAnimation, transform.position, transform.rotation) as Transform;
+				Destroy (gameObject);
+			}
 		}
 	}
 }

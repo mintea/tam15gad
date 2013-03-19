@@ -6,6 +6,7 @@ public class playerScript : MonoBehaviour
 	
 	public float playerSpeed;
 	public float hitTimer;
+	public float rotationDamping = 20;
 	public const float invincibleTime = 2;
 	public Transform deathExplosion;
 	public int playerLives;
@@ -14,19 +15,32 @@ public class playerScript : MonoBehaviour
 	void Start () 
 	{
 		hitTimer = 0;
+		playerSpeed = 5;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		//Amount to move player
-		float amtToMoveX = playerSpeed * Input.GetAxis ("Horizontal") * Time.deltaTime;
-		float amtToMoveY = playerSpeed * Input.GetAxis("Vertical") * Time.deltaTime;	
+		// Get Joystick Direction
+		float x = Input.GetAxis ("Horizontal");
+		float z = Input.GetAxis ("Vertical");
 		
-		//Moves the player
-		transform.Translate(Vector3.right * amtToMoveX);
-		transform.Translate (Vector3.forward * amtToMoveY);
+		// Rotate the player
+		Vector3 inputVec = new Vector3(x, 0, z);
+		inputVec *= playerSpeed;
+		
+		if (inputVec != Vector3.zero)
+			transform.rotation = Quaternion.Slerp(transform.rotation,
+				Quaternion.LookRotation(inputVec),
+				Time.deltaTime * rotationDamping);
+		
+		// Move the player
+		x *= playerSpeed * Time.deltaTime;
+		z *= playerSpeed * Time.deltaTime;
+		
+		transform.Translate(x,0,z,Space.World);
 	}
+	
 	
 	//Need to figure out how to destroy the game object while keeping the player lives intact
 	//Possibly create a new script called gameScript and run all processes there so we can 
@@ -38,22 +52,23 @@ public class playerScript : MonoBehaviour
 			if (Time.time > hitTimer) {
 				Transform tempExplosion;
 				
-				//Creates an explosion when enemy touches player.
-				tempExplosion = Instantiate (deathExplosion, transform.position, transform.rotation) as Transform;
+				// Creates an explosion when enemy touches player.
+				Instantiate (deathExplosion, transform.position, transform.rotation);
 				
 				playerLives--;
-				//If player still has lives, blink player
+				// If player still has lives, blink on hit
 				if (playerLives>0){
 					hitTimer = Time.time + invincibleTime;
 					StartCoroutine (BlinkPlayer(2));
 				}
 				else {
-				//Player does not have anymore lives.  Destroy!
+				// Player does not have anymore lives. Destroy!
 					StartCoroutine (WaitAndDestroyPlayer(1));
 				}
 			}
 		}
 	}
+	
 	
 	IEnumerator BlinkPlayer(float blinkTime) {
 		float endTime = Time.time + blinkTime;
@@ -63,8 +78,10 @@ public class playerScript : MonoBehaviour
 			renderer.enabled = !renderer.enabled;
 		}
 		
-		renderer.enabled = true; // when done blinking make sure player is shown
+		// when done blinking make sure player is shown
+		renderer.enabled = true;
 	}
+	
 	
 	IEnumerator WaitAndDestroyPlayer(float waitTime) {
 		renderer.enabled = false;

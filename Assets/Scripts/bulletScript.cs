@@ -9,7 +9,9 @@ public class bulletScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		
+		boundsX = 20;
+		boundsZ = 20;
+		bulletSpeed = 6;
 	}
 	
 	// Update is called once per frame
