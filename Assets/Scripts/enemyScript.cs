@@ -42,17 +42,20 @@ public class enemyScript : MonoBehaviour
 		
 	}
 	
-	void OnTriggerEnter(Collider playerProjectile)
+	void OnTriggerEnter(Collider collider)
 	{
-		if (playerProjectile.gameObject.tag == "playerProjectile")
+		if (collider.gameObject.tag == "playerProjectile")
 		{
 			health--;
 			if (health <= 0){
-				Transform tempExplosion;
-				
-				tempExplosion = Instantiate (enemyDeathAnimation, transform.position, transform.rotation) as Transform;
+				Instantiate (enemyDeathAnimation, transform.position, transform.rotation);
 				Destroy (gameObject);
 			}
+		}
+		else if (collider.gameObject.tag == "Player")
+		{
+			Instantiate (enemyDeathAnimation, transform.position, transform.rotation);
+			Destroy (gameObject);
 		}
 	}
 }

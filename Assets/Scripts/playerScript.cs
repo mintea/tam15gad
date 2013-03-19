@@ -50,8 +50,6 @@ public class playerScript : MonoBehaviour
 		if (enemy.gameObject.tag == "enemy")
 		{
 			if (Time.time > hitTimer) {
-				Transform tempExplosion;
-				
 				// Creates an explosion when enemy touches player.
 				Instantiate (deathExplosion, transform.position, transform.rotation);
 				
