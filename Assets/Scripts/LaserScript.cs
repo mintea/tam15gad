@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class bulletScript : MonoBehaviour {
+public class LaserScript : MonoBehaviour {
 	public int boundsX;
 	public int boundsZ;
 	public float bulletSpeed;
@@ -11,7 +11,7 @@ public class bulletScript : MonoBehaviour {
 	{
 		boundsX = 20;
 		boundsZ = 20;
-		bulletSpeed = 6;
+		bulletSpeed = 8;
 	}
 	
 	// Update is called once per frame
@@ -20,11 +20,9 @@ public class bulletScript : MonoBehaviour {
 		//amount to move bullet
 		float amtToMove = bulletSpeed * Time.deltaTime;
 		
-		transform.Translate (Vector3.forward * amtToMove);
-		
 //		Laser lookin shot
-//		transform.Translate (Vector3.forward * amtToMove * 2);
-//		transform.localScale += (Vector3.forward * amtToMove * 3);
+		transform.Translate (Vector3.forward * amtToMove * 2);
+		transform.localScale += (Vector3.forward * amtToMove * 2);
 		
 		//Destroys bullets if it goes out of bounds
 		if (Mathf.Abs(transform.position.z) > boundsZ || Mathf.Abs (transform.position.x) > boundsX)

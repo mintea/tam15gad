@@ -1,3 +1,6 @@
+//Fires a stray bullet when changing direction .ie shooting up then pressing down w/o
+//hitting any other direction
+
 using UnityEngine;
 using System.Collections;
 
@@ -27,6 +30,9 @@ public class WeaponScript : MonoBehaviour {
 	{
 		float x = Input.GetAxis ("HorizontalFire");
 		float z = Input.GetAxis ("VerticalFire");
+		
+		Debug.Log( x );
+		Debug.Log( z );
 		
 		Vector3 inputVec = new Vector3(x, 0, z);
 		inputVec *= rotationSpeed;
