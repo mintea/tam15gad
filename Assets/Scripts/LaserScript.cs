@@ -31,11 +31,12 @@ public class LaserScript : MonoBehaviour {
 		}
 	}
 	
+	
 	void OnTriggerEnter(Collider enemy)
 	{
 		if (enemy.gameObject.tag == "enemy")
 		{
-			Destroy (gameObject);
+			enemy.gameObject.GetComponent<enemyScript>().Flagged = true;
 		}
 	}
 }

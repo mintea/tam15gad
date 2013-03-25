@@ -10,6 +10,7 @@ public class enemyScript : MonoBehaviour
 	public int maxDistance;
 	public Transform enemyDeathAnimation;
 	public int health;
+	public bool Flagged;
 	
 	private Transform myTransform;
 	// Use this for initialization
@@ -21,9 +22,9 @@ public class enemyScript : MonoBehaviour
 	
 	void Start () 
 	{
-		moveSpeed = 5;
+		moveSpeed = 0;
 		rotationSpeed = 10;
-		health = 5;
+		health = 100;
 		GameObject go = GameObject.FindGameObjectWithTag("Player");
 		
 		target = go.transform;
@@ -47,10 +48,12 @@ public class enemyScript : MonoBehaviour
 		if (collider.gameObject.tag == "playerProjectile")
 		{
 			health--;
+			Debug.Log( health );
 			if (health <= 0){
 				Instantiate (enemyDeathAnimation, transform.position, transform.rotation);
 				Destroy (gameObject);
 			}
+			Destroy( collider.gameObject );
 		}
 		else if (collider.gameObject.tag == "Player")
 		{
@@ -58,4 +61,5 @@ public class enemyScript : MonoBehaviour
 			Destroy (gameObject);
 		}
 	}
+
 }

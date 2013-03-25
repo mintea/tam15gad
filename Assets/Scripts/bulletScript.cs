@@ -33,11 +33,12 @@ public class bulletScript : MonoBehaviour {
 		}
 	}
 	
+	/*
 	void OnTriggerEnter(Collider enemy)
 	{
 		if (enemy.gameObject.tag == "enemy")
 		{
 			Destroy (gameObject);
 		}
-	}
+	}*/
 }

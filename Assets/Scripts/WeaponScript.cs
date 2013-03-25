@@ -4,12 +4,20 @@
 using UnityEngine;
 using System.Collections;
 
+enum WEAPS{
+	Default = 0,
+	Laser,
+	Split,
+}
+
 public class WeaponScript : MonoBehaviour {
+	public float rotationDamping = 1f;
+	public float attackTimer;
 	public int maxDistance;
 	public int rotationSpeed;
-	public Rigidbody bullet;
-	public float rotationDamping = 20f;
-	public float attackTimer;
+	public int Weapon = 0;
+	public Rigidbody[] bullet = new Rigidbody[5];
+
 
 	private Transform myTransform;
 	
@@ -30,9 +38,6 @@ public class WeaponScript : MonoBehaviour {
 	{
 		float x = Input.GetAxis ("HorizontalFire");
 		float z = Input.GetAxis ("VerticalFire");
-		
-		Debug.Log( x );
-		Debug.Log( z );
 		
 		Vector3 inputVec = new Vector3(x, 0, z);
 		inputVec *= rotationSpeed;
@@ -56,7 +61,7 @@ public class WeaponScript : MonoBehaviour {
 	
 	public void Shoot() {
 		myTransform.position += myTransform.forward * 1;
-		Instantiate(bullet, myTransform.position, myTransform.rotation);
+		Instantiate(bullet[Weapon], myTransform.position, myTransform.rotation);
 		myTransform.position -= myTransform.forward * 1;
 	}
 }
