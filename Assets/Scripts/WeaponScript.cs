@@ -1,6 +1,3 @@
-//Fires a stray bullet when changing direction .ie shooting up then pressing down w/o
-//hitting any other direction
-
 using UnityEngine;
 using System.Collections;
 
@@ -11,10 +8,10 @@ enum WEAPS{
 }
 
 public class WeaponScript : MonoBehaviour {
-	public float rotationDamping = 1f;
 	public float attackTimer;
+	private float x;
+	private float z;
 	public int maxDistance;
-	public int rotationSpeed;
 	public int Weapon = 0;
 	public Rigidbody[] bullet = new Rigidbody[5];
 
@@ -24,7 +21,6 @@ public class WeaponScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		maxDistance = 0; // not used
-		rotationSpeed = 10;
 		attackTimer = 0;
 		
 		myTransform = transform;
@@ -34,24 +30,21 @@ public class WeaponScript : MonoBehaviour {
 		maxDistance = 2;
 	}
 	
-	void UpdateMovement()
+	void UpdateRotation()
 	{
-		float x = Input.GetAxis ("HorizontalFire");
-		float z = Input.GetAxis ("VerticalFire");
-		
 		Vector3 inputVec = new Vector3(x, 0, z);
-		inputVec *= rotationSpeed;
 		
 		if (inputVec != Vector3.zero)
-            transform.rotation = Quaternion.Slerp(transform.rotation, 
-                Quaternion.LookRotation(inputVec), 
-                Time.deltaTime * rotationDamping);
+            transform.rotation = Quaternion.LookRotation(inputVec);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		UpdateMovement();
-		if (Mathf.Abs(Input.GetAxis ("HorizontalFire")) > 0.0000001f || Mathf.Abs (Input.GetAxis ("VerticalFire")) > 0.0000001f){
+		x = Input.GetAxis ("HorizontalFire");
+		z = Input.GetAxis ("VerticalFire");
+		UpdateRotation();
+
+		if (Mathf.Abs(x) > 0.0000001f || Mathf.Abs (z) > 0.0000001f){
 			if (Time.time > attackTimer) {
 				Shoot ();
 				attackTimer = Time.time + 0.1f;
