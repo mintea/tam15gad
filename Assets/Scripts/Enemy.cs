@@ -1,64 +1,44 @@
 using UnityEngine;
 using System.Collections;
 
-public class enemyScript : MonoBehaviour 
-{
+public class Enemy : Unit {
 	
 	public Transform target;
-	public int moveSpeed;
-	public int rotationSpeed;
-	public int maxDistance;
-	public Transform enemyDeathAnimation;
-	public int health;
-	public bool Flagged;
 	
-	private Transform myTransform;
-	// Use this for initialization
-	
-	void Awake()
-	{
-		myTransform = transform;
+	void Awake () {
+//		target = GameObject.FindGameObjectWithTag("Player").transform; // set player as the target
 	}
 	
-	void Start () 
-	{
-		moveSpeed = 0;
-		rotationSpeed = 10;
-		health = 100;
-		GameObject go = GameObject.FindGameObjectWithTag("Player");
-		
-		target = go.transform;
-		maxDistance = 2; // not used yet
+	void Start () {
+		_transform = transform;
 	}
 	
 	// Update is called once per frame
-	void Update () 
-	{
-		//Looks at target
-		myTransform.rotation = Quaternion.Slerp (myTransform.rotation, 
-			Quaternion.LookRotation (target.position - myTransform.position),rotationSpeed * Time.deltaTime);
+	void Update () {
 		
-		//Move towards target
-		myTransform.position += myTransform.forward * moveSpeed * Time.deltaTime;
+		if (target != null)
+			SetDirection (
+				target.position.x - _transform.position.x,
+				target.position.z - _transform.position.z
+			);
 		
+		else {
+			target = GameObject.FindGameObjectWithTag("Player").transform; // set player as the target
+		}
+		
+		if (direction != Vector3.zero){
+			
+			RotateUnit();
+			MoveUnit();
+		}
 	}
 	
 	void OnTriggerEnter(Collider collider)
 	{
-		if (collider.gameObject.tag == "playerProjectile")
+		if (collider.gameObject.tag == "Player")
 		{
-			health--;
-			Debug.Log( health );
-			if (health <= 0){
-				Instantiate (enemyDeathAnimation, transform.position, transform.rotation);
-				Destroy (gameObject);
-			}
-			Destroy( collider.gameObject );
-		}
-		else if (collider.gameObject.tag == "Player")
-		{
-			Instantiate (enemyDeathAnimation, transform.position, transform.rotation);
-			Destroy (gameObject);
+			KillUnit(); // suicide
+			collider.GetComponent<Player>().AdjustHealth(-1);
 		}
 	}
 
