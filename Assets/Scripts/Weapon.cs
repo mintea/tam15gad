@@ -1,60 +1,79 @@
 using UnityEngine;
 using System.Collections;
+using System; // for Enum
 
-enum WEAPS{
-	Default = 0,
-	Laser,
-	Split,
-}
-
-public class WeaponScript : MonoBehaviour {
-	public float attackTimer;
-	private float x;
-	private float z;
-	public int maxDistance;
-	public int Weapon = 0;
-	public Rigidbody[] bullet = new Rigidbody[5];
-
-
-	private Transform myTransform;
+public class Weapon : MonoBehaviour {
+	
+	public GameObject projectile;
+	
+	public Vector3 direction = Vector3.zero;		// the weapon's direction
+	
+	public float coolDown = 0.2f; // time between shots
+	
+	protected Transform _transform;
+	private float _nextShot; // time off cooldown
 	
 	// Use this for initialization
-	void Start () {
-		maxDistance = 0; // not used
-		attackTimer = 0;
-		
-		myTransform = transform;
-		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		myTransform.parent = player.transform;
-		//InvokeRepeating("Shoot",1,0.5f); // Can use for Autoshooting
-		maxDistance = 2;
+	void Awake () {
+		_transform = transform;
 	}
 	
-	void UpdateRotation()
-	{
-		Vector3 inputVec = new Vector3(x, 0, z);
-		
-		if (inputVec != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(inputVec);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		x = Input.GetAxis ("HorizontalFire");
-		z = Input.GetAxis ("VerticalFire");
-		UpdateRotation();
-
-		if (Mathf.Abs(x) > 0.0000001f || Mathf.Abs (z) > 0.0000001f){
-			if (Time.time > attackTimer) {
-				Shoot ();
-				attackTimer = Time.time + 0.1f;
+	public void Shoot(WeaponName weapon) {
+//		GameObject go = Instantiate(bullets[(int)weapon], _transform.position + _transform.forward, _transform.rotation) as GameObject;
+		if (Time.time > _nextShot) {
+			GameObject go = Instantiate(projectile, _transform.position + _transform.forward, _transform.rotation) as GameObject;
+			
+			switch(weapon) {
+			case WeaponName.Laser:
+//				coolDown = 0.5f;
+				go.AddComponent<Laser>();
+				go.renderer.material.color = Color.red;
+				break;
+			case WeaponName.Bullet:
+			case WeaponName.Split:
+			default:
+//				coolDown = 0.2f;
+				go.AddComponent<Bullet>();
+				break;
 			}
+			
+			if (_transform.parent.tag == "Player") {
+					go.GetComponent<Projectile>().isPlayer = true;
+			}
+			
+			if (weapon == WeaponName.Split) {	
+				float spreadAngle = 90;
+				int bullets=5;
+//				coolDown = 0.1f;
+				
+				// set first shot
+				go.renderer.material.color = Color.blue;
+				go.transform.Rotate( 0, -spreadAngle/2, 0 );
+				
+				for( int i = 0; i < bullets; ++i ) {
+					Instantiate(go);
+					go.transform.Rotate( 0, spreadAngle/bullets, 0 );
+				}
+				
+			}
+			
+			_nextShot = Time.time + coolDown;
 		}
 	}
 	
-	public void Shoot() {
-		myTransform.position += myTransform.forward * 1;
-		Instantiate(bullet[Weapon], myTransform.position, myTransform.rotation);
-		myTransform.position -= myTransform.forward * 1;
+	public void SetDirection(float x, float z) {
+		direction.x = x;
+		direction.z = z;
+		if (direction != Vector3.zero) {
+			_transform.rotation = Quaternion.LookRotation(direction);
+		}
 	}
+	
+}
+
+
+public enum WeaponName {
+	Bullet,
+	Split,
+	Laser,
 }
