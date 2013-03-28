@@ -22,7 +22,7 @@ public class enemyScript : MonoBehaviour
 	
 	void Start () 
 	{
-		moveSpeed = 0;
+		moveSpeed = 5;
 		rotationSpeed = 10;
 		health = 100;
 		GameObject go = GameObject.FindGameObjectWithTag("Player");
