@@ -29,7 +29,7 @@ public class Projectile : MonoBehaviour {
 		_transform = transform;
 		color = _transform.renderer.material.color;
 		StartPos = _transform.position;
-		killZone = Camera.main.GetComponent<GameMaster>().viewWidth;
+		killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
 		InvokeRepeating("ChangeColor",0,0.25f);
 	}
 	

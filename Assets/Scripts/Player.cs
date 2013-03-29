@@ -6,6 +6,10 @@ public class Player : Unit {
 	
 	// Use this for initialization
 	void Start () {
+		invincibleTime = 2;
+		maxHealth = 10;
+		curHealth = maxHealth;
+		moveSpeed = 6;
 		rotSpeed = 100;
 		_transform = transform;
 		weapon = _transform.GetComponentInChildren<Weapon>();
