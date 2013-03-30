@@ -19,42 +19,48 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	public void Shoot(WeaponName weapon) {
-//		GameObject go = Instantiate(bullets[(int)weapon], _transform.position + _transform.forward, _transform.rotation) as GameObject;
 		if (Time.time > _nextShot) {
 			GameObject go = Instantiate(projectile, _transform.position + _transform.forward, _transform.rotation) as GameObject;
 			
+//			go.transform.Rotate( 0, UnityEngine.Random.Range (-3f,3f), 0 ); // random angle for shots
+			
 			switch(weapon) {
-			case WeaponName.Laser:
-//				coolDown = 0.5f;
-				go.AddComponent<Laser>();
-				go.renderer.material.color = Color.red;
-				break;
-			case WeaponName.Bullet:
-			case WeaponName.Split:
-			default:
-//				coolDown = 0.2f;
-				go.AddComponent<Bullet>();
-				break;
+				case WeaponName.Bullet:
+					go.AddComponent<Bullet>();
+					go.renderer.material.color = new Color(1f,0.5f,0); // yellow
+					coolDown = 0.2f;
+					break;
+					
+				case WeaponName.Laser:
+					go.AddComponent<Laser>();
+					go.renderer.material.color = new Color(0,0.5f,1); // light blue
+					coolDown = 0.5f;
+					break;
+					
+				case WeaponName.SplitBullet:
+					go.AddComponent<Bullet>();
+					go.renderer.material.color = Color.red; // yellow
+					coolDown = 0.4f;
+					break;
+				
+				case WeaponName.SplitLaser:
+					go.AddComponent<Laser>();
+					coolDown = 1f;
+					break;
+	
+				default:
+					go.AddComponent<Bullet>();
+					coolDown = 0.2f;
+					break;
 			}
 			
+			// set player flag
 			if (_transform.parent.tag == "Player") {
-					go.GetComponent<Projectile>().isPlayer = true;
+				go.GetComponent<Projectile>().isPlayer = true;
 			}
 			
-			if (weapon == WeaponName.Split) {	
-				float spreadAngle = 90;
-				int bullets=5;
-//				coolDown = 0.1f;
-				
-				// set first shot
-				go.renderer.material.color = Color.blue;
-				go.transform.Rotate( 0, -spreadAngle/2, 0 );
-				
-				for( int i = 0; i < bullets; ++i ) {
-					Instantiate(go);
-					go.transform.Rotate( 0, spreadAngle/bullets, 0 );
-				}
-				
+			if (weapon == WeaponName.SplitBullet|| weapon == WeaponName.SplitLaser) {	
+				SpawnSplit(go, 45, 4);
 			}
 			
 			_nextShot = Time.time + coolDown;
@@ -69,11 +75,27 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 	
+	// This spawns the bullets for the split shot.
+	// projectile is the projectile to clone 
+	// angle is the spread angle
+	// bullets is the number of bullets in this spread shot
+	void SpawnSplit(GameObject projectile, float angle, int bullets) {
+		
+		projectile.transform.Rotate( 0, -angle/2, 0 );
+		
+		for( int i = 0; i < bullets-1; ++i ) {
+			Instantiate(projectile);
+			projectile.transform.Rotate( 0, angle/(bullets-1), 0 );
+		}
+		
+	}
+	
 }
 
 
 public enum WeaponName {
 	Bullet,
-	Split,
 	Laser,
+	SplitBullet,
+	SplitLaser
 }

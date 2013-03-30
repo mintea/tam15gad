@@ -3,11 +3,10 @@ using System.Collections;
 
 public class Enemy : Unit {
 	
+	public GameObject drop;
 	public Transform target;
-	
-	void Awake () {
-//		target = GameObject.FindGameObjectWithTag("Player").transform; // set player as the target
-	}
+	public int collideDamage = 1;
+	public float dropRate;
 	
 	void Start () {
 		_transform = transform;
@@ -16,20 +15,24 @@ public class Enemy : Unit {
 	// Update is called once per frame
 	void Update () {
 		
-		if (target != null)
+		Target ();
+		
+		if (moveDir != Vector3.zero){
+			
+			RotateUnit();
+			MoveUnit();
+		}
+	}
+	
+	protected void Target() {
+		if (target == null) {
+			target = GameObject.FindGameObjectWithTag("Player").transform; // set player as the target
+		}
+		else {
 			SetDirection (
 				target.position.x - _transform.position.x,
 				target.position.z - _transform.position.z
 			);
-		
-		else {
-			target = GameObject.FindGameObjectWithTag("Player").transform; // set player as the target
-		}
-		
-		if (direction != Vector3.zero){
-			
-			RotateUnit();
-			MoveUnit();
 		}
 	}
 	
@@ -38,8 +41,15 @@ public class Enemy : Unit {
 		if (collider.gameObject.tag == "Player")
 		{
 			KillUnit(); // suicide
-			collider.GetComponent<Player>().AdjustHealth(-1);
+			collider.GetComponent<Player>().AdjustHealth(-collideDamage);
 		}
 	}
+	
+    void OnDestroy () {
+        if (Random.value <= dropRate) {
+			Instantiate(drop,_transform.position, Quaternion.identity);
+		}
+    }
+
 
 }

@@ -4,7 +4,7 @@ using System.Collections;
 public class Unit : MonoBehaviour {
 	
 	public GameObject deathAnimation;
-	public Vector3 direction = Vector3.zero;	// the direction of movement
+	public Vector3 moveDir = Vector3.zero;	// the direction of movement
 	
 	public float moveSpeed;
 	public float rotSpeed;
@@ -41,8 +41,8 @@ public class Unit : MonoBehaviour {
 	}
 	
 	protected void SetDirection(float x, float z) {
-		direction.x = x;
-		direction.z = z;
+		moveDir.x = x;
+		moveDir.z = z;
 	}
 	
 	
@@ -56,7 +56,7 @@ public class Unit : MonoBehaviour {
 //				Quaternion.LookRotation(direction);
 				Quaternion.Lerp (
 						_transform.rotation, 
-						Quaternion.LookRotation(direction),
+						Quaternion.LookRotation(moveDir),
 						rotSpeed * Time.deltaTime
 				);
 	}

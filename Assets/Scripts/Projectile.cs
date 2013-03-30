@@ -7,13 +7,14 @@ public class Projectile : MonoBehaviour {
 	public int   piercing;
 	public bool  isPlayer;
 	public float moveAmount;
+	
 	private Transform _transform;
-	public Color color;
-	public Vector3 StartPos;
-	public float killZone;
+	private Vector3 _startPos;	// for debugging
+	private float _killZone;
 	
 	public Color[] colorChoices = {
 		Color.red,
+		new Color(1,0.4f,0), // orange
 		Color.yellow,
 		Color.green,
 		Color.blue,
@@ -27,20 +28,18 @@ public class Projectile : MonoBehaviour {
 	
 	void Awake() {
 		_transform = transform;
-		color = _transform.renderer.material.color;
-		StartPos = _transform.position;
-		killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
-		InvokeRepeating("ChangeColor",0,0.25f);
+		_startPos = _transform.position;
+		_killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
+//		InvokeRepeating("ChangeColor",0,0.25f);
 	}
 	
 	public void Move() {
 		moveAmount = moveSpeed * Time.deltaTime;
 		_transform.Translate (Vector3.forward * moveAmount);
-		Debug.DrawLine (StartPos, _transform.position, Color.grey);
-//		ChangeColor();
+		Debug.DrawLine (_startPos, _transform.position, Color.grey);
+		
 		//Destroys bullets if it goes out of bounds
-//		if (Mathf.Abs(Vector3.Distance(_transform.position.z) > boundsZ; || Mathf.Abs (_transform.position.x) > boundsX)
-		if (Vector3.Distance (_transform.position, Vector3.zero) > killZone)
+		if (Vector3.Distance (_transform.position, Vector3.zero) > _killZone)
 		{
 			Destroy(gameObject);
 		}

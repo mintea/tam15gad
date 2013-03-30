@@ -11,10 +11,12 @@ public class SpawnScript : MonoBehaviour
 	public float spawnTimer = 0.0f;
 	public float spawnCooldown = 0.0f;
 	
+	private Transform _transform;
+	
 	// Use this for initialization
 	void Start () 
 	{
-		
+		_transform = transform;
 	}
 	
 	// Update is called once per frame
@@ -31,12 +33,12 @@ public class SpawnScript : MonoBehaviour
 		{
 			spawnTimer += Time.deltaTime;
 		}
-		Debug.Log (spawnTimer);
+//		Debug.Log (spawnTimer);
 	}
 	
 	private void spawnEnemy()
 	{
-		GameObject Enemy = (GameObject) Instantiate(SuicideEnemy, gameObject.transform.position, Quaternion.identity);
+		GameObject Enemy = (GameObject) Instantiate(SuicideEnemy, _transform.position+_transform.forward, _transform.rotation);
 	}
 
 }

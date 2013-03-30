@@ -3,11 +3,12 @@ using System.Collections;
 
 public class Player : Unit {
 	public Weapon weapon;
+	public bool isBuff;
+	public float buffTime;
 	
 	// Use this for initialization
 	void Start () {
 		invincibleTime = 2;
-		maxHealth = 10;
 		curHealth = maxHealth;
 		moveSpeed = 6;
 		rotSpeed = 100;
@@ -26,13 +27,15 @@ public class Player : Unit {
 		SetDirection (Input.GetAxis ("Horizontal"),Input.GetAxis ("Vertical"));
 		
 		// rotate and move
-		if (direction != Vector3.zero){
+		if (moveDir != Vector3.zero){
 			RotateUnit();
 			MoveUnit();
 		}
 		
-		if (Input.GetKeyDown(KeyCode.JoystickButton11)){
-			ChangeWeapon();
+		// reset buff if not buff
+		if (isBuff && Time.time > buffTime) {
+			curWeapon = 0;
+			isBuff = false;
 		}
 		
 		if (weapon == null) {
@@ -48,7 +51,18 @@ public class Player : Unit {
 		
 	}
 	
-	void ChangeWeapon() {
-		curWeapon = (curWeapon+1) % 3;
+	public void SetBuff(int weap, float time) {
+		isBuff = true;
+		curWeapon = weap;
+		buffTime = Time.time + time;
 	}
+	
+	void OnTriggerEnter(Collider collider)
+	{
+		if (collider.gameObject.tag == "Enemy")
+		{
+			_transform.position += (_transform.position - collider.transform.position)/2;
+		}
+	}
+
 }
