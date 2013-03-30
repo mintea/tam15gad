@@ -42,7 +42,7 @@ public class Player : Unit {
 			weapon = _transform.GetComponentInChildren<Weapon>();
 		}
 		else {
-			weapon.SetDirection(Input.GetAxis ("HorizontalFire"),Input.GetAxis ("VerticalFire"));
+			weapon.SetDirection(Mathf.Round (Input.GetAxis ("HorizontalFire")),Mathf.Round(Input.GetAxis ("VerticalFire")));
 			// shoot if using joystick
 			if (weapon.direction != Vector3.zero) {
 				weapon.Shoot((WeaponName)curWeapon);
