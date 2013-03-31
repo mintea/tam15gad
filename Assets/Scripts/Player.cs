@@ -14,7 +14,7 @@ public class Player : Unit {
 		rotSpeed = 100;
 		_transform = transform;
 		weapon = _transform.GetComponentInChildren<Weapon>();
-		
+		curWeapon = 0;
 	}
 	void Awake() {
 		
@@ -32,11 +32,27 @@ public class Player : Unit {
 			MoveUnit();
 		}
 		
-		// reset buff if not buff
-		if (isBuff && Time.time > buffTime) {
-			curWeapon = 0;
-			isBuff = false;
+		//WeaponSwitch
+		if( Input.GetKeyDown(KeyCode.Q) )
+		{
+			curWeapon--;
+			if( curWeapon < 0 )
+				curWeapon = 3;
 		}
+		else if( Input.GetKeyDown(KeyCode.E) )
+		{
+			curWeapon++;
+			if( curWeapon > 3 )
+				curWeapon = 0;
+		}
+		//End of WeaponSwitch
+		
+		
+		// reset buff if not buff
+//		if (isBuff && Time.time > buffTime) {
+//			curWeapon = 0;
+//			isBuff = false;
+//		}
 		
 		if (weapon == null) {
 			weapon = _transform.GetComponentInChildren<Weapon>();

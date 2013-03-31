@@ -38,7 +38,8 @@ public class SpawnScript : MonoBehaviour
 	
 	private void spawnEnemy()
 	{
-		GameObject Enemy = (GameObject) Instantiate(SuicideEnemy, _transform.position+_transform.forward, _transform.rotation);
+//		GameObject Enemy = (GameObject) Instantiate(SuicideEnemy, _transform.position+_transform.forward, _transform.rotation);
+		Instantiate(SuicideEnemy, _transform.position+_transform.forward, _transform.rotation);
 	}
 
 }
