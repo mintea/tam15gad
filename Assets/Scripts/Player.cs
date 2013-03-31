@@ -14,7 +14,7 @@ public class Player : Unit {
 		rotSpeed = 100;
 		_transform = transform;
 		weapon = _transform.GetComponentInChildren<Weapon>();
-		curWeapon = 0;
+		curWeapon = heldWeapon = 0;
 	}
 	void Awake() {
 		
@@ -33,18 +33,14 @@ public class Player : Unit {
 		}
 		
 		//WeaponSwitch
-		if( Input.GetKeyDown(KeyCode.Q) )
+		//Still need to add in GamePad controls
+		if( Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E) )
 		{
-			curWeapon--;
-			if( curWeapon < 0 )
-				curWeapon = 3;
+			int temp = curWeapon;
+			curWeapon = heldWeapon;
+			heldWeapon = temp;
 		}
-		else if( Input.GetKeyDown(KeyCode.E) )
-		{
-			curWeapon++;
-			if( curWeapon > 3 )
-				curWeapon = 0;
-		}
+
 		//End of WeaponSwitch
 		
 		
@@ -71,6 +67,11 @@ public class Player : Unit {
 		isBuff = true;
 		curWeapon = weap;
 		buffTime = Time.time + time;
+	}
+	
+	public void SetBuff( int weap )
+	{
+		curWeapon = weap;
 	}
 	
 	void OnTriggerEnter(Collider collider)

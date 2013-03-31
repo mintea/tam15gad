@@ -21,7 +21,7 @@ public class BuffContainer : MonoBehaviour {
 	{
 		if (collider.gameObject.tag == "Player")
 		{
-			collider.GetComponent<Player>().SetBuff((int)weapon, 10);
+			collider.GetComponent<Player>().SetBuff((int)weapon);
 			Destroy(gameObject);
 		}
 	}

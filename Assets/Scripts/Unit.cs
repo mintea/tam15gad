@@ -14,6 +14,7 @@ public class Unit : MonoBehaviour {
 	public int   maxHealth;
 	
 	public int   curWeapon;
+	public int	 heldWeapon;
 	
 	public bool  isInvincible;					// flag to check if unit is invincible (ex. after getting damaged)
 	
