@@ -79,6 +79,7 @@ public class Player : Unit {
 		if (collider.gameObject.tag == "Enemy")
 		{
 			_transform.position += (_transform.position - collider.transform.position)/2;
+			curWeapon = 0;
 		}
 	}
 
