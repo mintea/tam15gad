@@ -14,7 +14,7 @@ public class Player : Unit {
 		rotSpeed = 100;
 		_transform = transform;
 		weapon = _transform.GetComponentInChildren<Weapon>();
-		curWeapon = heldWeapon = 0;
+		curWeapon = heldWeapon = 4;
 	}
 	void Awake() {
 		

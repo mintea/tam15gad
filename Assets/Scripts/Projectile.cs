@@ -30,6 +30,7 @@ public class Projectile : MonoBehaviour {
 		_transform = transform;
 		_startPos = _transform.position;
 		_killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
+		Debug.Log( _killZone );
 //		InvokeRepeating("ChangeColor",0,0.25f);
 	}
 	
@@ -40,6 +41,18 @@ public class Projectile : MonoBehaviour {
 		
 		//Destroys bullets if it goes out of bounds
 		if (Vector3.Distance (_transform.position, Vector3.zero) > _killZone)
+		{
+			Destroy(gameObject);
+		}
+	}
+	
+	public void Move( float killZone ) {
+		moveAmount = moveSpeed * Time.deltaTime;
+		_transform.Translate (Vector3.forward * moveAmount);
+		Debug.DrawLine (_startPos, _transform.position, Color.grey);
+		
+		//Destroys bullets if it goes out of bounds
+		if (Vector3.Distance ( _transform.position, _startPos ) > killZone)
 		{
 			Destroy(gameObject);
 		}

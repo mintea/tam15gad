@@ -48,6 +48,11 @@ public class Weapon : MonoBehaviour {
 					coolDown = 1f;
 					break;
 	
+				case WeaponName.FlameThrower:
+					go.AddComponent<Fire>();
+					go.renderer.material.color = new Color(1,0.4f,0); //orange
+					coolDown = .05f;
+					break;
 				default:
 					go.AddComponent<Bullet>();
 					coolDown = 0.2f;
@@ -97,5 +102,6 @@ public enum WeaponName {
 	Bullet,
 	Laser,
 	SplitBullet,
-	SplitLaser
+	SplitLaser,
+	FlameThrower
 }
