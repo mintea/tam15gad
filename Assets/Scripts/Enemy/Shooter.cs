@@ -24,7 +24,7 @@ public class Shooter : Enemy {
 			enemyWeap = _transform.GetComponentInChildren<Weapon>();
 		}
 		else{
-			enemyWeap.SetDirection( 1f, 1f );			//shoots at 45 degrees
+			enemyWeap.SetLocalDirection( 1f, 1f );			//shoots at 45 degrees
 			enemyWeap.Shoot((WeaponName)curWeapon);
 		}
 	}

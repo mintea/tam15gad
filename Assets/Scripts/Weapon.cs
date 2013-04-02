@@ -80,6 +80,14 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 	
+	public void SetLocalDirection(float x, float z) {
+		direction.x = x;
+		direction.z = z;
+		if (direction != Vector3.zero) {
+			_transform.localRotation = Quaternion.LookRotation(direction);
+		}
+	}
+	
 	// This spawns the bullets for the split shot.
 	// projectile is the projectile to clone 
 	// angle is the spread angle

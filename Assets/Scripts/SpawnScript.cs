@@ -5,7 +5,7 @@ public class SpawnScript : MonoBehaviour
 {
 	
 	//Enemy Prefabs
-	public GameObject SuicideEnemy;
+	public GameObject[] enemies;
 	
 	public bool spawn = true;
 	public float spawnTimer = 0.0f;
@@ -39,7 +39,7 @@ public class SpawnScript : MonoBehaviour
 	private void spawnEnemy()
 	{
 //		GameObject Enemy = (GameObject) Instantiate(SuicideEnemy, _transform.position+_transform.forward, _transform.rotation);
-		Instantiate(SuicideEnemy, _transform.position+_transform.forward, _transform.rotation);
+		Instantiate(enemies[Random.Range(0,Enemies.Length)], _transform.position+_transform.forward, _transform.rotation);
 	}
 
 }
