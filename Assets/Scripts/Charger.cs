@@ -10,7 +10,7 @@ public class Charger : Enemy {
 	
 	// Update is called once per frame
 	void Update () {
-		Target ();
+		Target ( "Player" );
 		
 		if (moveDir != Vector3.zero){
 			
