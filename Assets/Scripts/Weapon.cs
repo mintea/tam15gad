@@ -27,7 +27,6 @@ public class Weapon : MonoBehaviour {
 			switch(weapon) {
 				case WeaponName.Bullet:
 					go.AddComponent<Bullet>();
-					go.renderer.material.color = new Color(1f,0.5f,0); // yellow
 					coolDown = 0.2f;
 					break;
 					
@@ -39,18 +38,19 @@ public class Weapon : MonoBehaviour {
 					
 				case WeaponName.SplitBullet:
 					go.AddComponent<Bullet>();
-					go.renderer.material.color = Color.red; // yellow
+					go.renderer.material.color = Color.red;
 					coolDown = 0.4f;
 					break;
 				
 				case WeaponName.SplitLaser:
 					go.AddComponent<Laser>();
+					go.renderer.material.color = Color.yellow;
 					coolDown = 1f;
 					break;
 	
 				case WeaponName.FlameThrower:
 					go.AddComponent<Fire>();
-					go.renderer.material.color = new Color(1,0.4f,0); //orange
+					go.renderer.material.color = new Color(1,0.3f,0); //orange
 					coolDown = .05f;
 					break;
 				default:
