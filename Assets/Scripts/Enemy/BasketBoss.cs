@@ -17,21 +17,21 @@ public class BasketBoss : Unit {
 	void Update () {
 		if (target == null && ballPossession) // ( Time.time > nextTargetTime )
 		{
-			if( UnityEngine.Random.value <= 1.8f )
+			if( UnityEngine.Random.value <= .8f )
 			{
 				Target( "BasketBoss" );
 				if (target != _transform) {
 					ballPossession = false; // pass ball to another boss
-					RotateUnit();
-					Pass();
-					renderer.material.color = Color.red;
+					StartCoroutine("WaitPass");
+//					Pass ();
 				}
-				target = null;
+//				target = null;
 			}
 			else
 			{
 				Debug.Log("DUNK");
 				Target( "Player" );
+				target = null;
 			}
 			
 		}
@@ -51,9 +51,10 @@ public class BasketBoss : Unit {
 	protected void Target( string unitTarget ) {
 		Debug.Log (unitTarget);
 		if (target == null) {
-			int targetIndex = Random.Range (0,5);
+			GameObject[] targets = GameObject.FindGameObjectsWithTag( unitTarget );
+			int targetIndex = Random.Range (0,targets.Length);
 			Debug.Log (targetIndex);
-			target = GameObject.FindGameObjectsWithTag( unitTarget )[targetIndex].transform; // set player as the target
+			target = targets[targetIndex].transform; // set player as the target
 			if (target == _transform) target = null;
 //		}
 //		else {
@@ -75,14 +76,34 @@ public class BasketBoss : Unit {
 		}
 	}
 	
+	IEnumerator WaitPass() {
+		yield return new WaitForSeconds(Random.Range (.5f,2f));
+		Pass ();
+	}
+	
 	//Pass the ball after dunking on that fool
 	void Pass()
 	{
 //		Target( "BasketBoss" );
-		RotateUnit();
-		GameObject ball = Instantiate(ballPrefab, _transform.position + _transform.forward*2, _transform.rotation) as GameObject;
-		Basketball bball = ball.GetComponent<Basketball>();
-		bball.SetTarget (target);
+		if (target != _transform) {
+			ballPossession = false; // pass ball to another boss
+			RotateUnit();
+			
+			GameObject ball = Instantiate(ballPrefab, _transform.position + _transform.forward*2, _transform.rotation) as GameObject;
+			Basketball bball = ball.GetComponent<Basketball>();
+			bball.SetTarget (target);
+			
+			target = null;
+			renderer.material.color = Color.red;
+		}
 		target = null;
 	}
+	
+//	Target( "BasketBoss" );
+//				if (target != _transform) {
+//					ballPossession = false; // pass ball to another boss
+//					Pass();
+//					renderer.material.color = Color.red;
+//				}
+//				target = null;
 }
