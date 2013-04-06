@@ -81,6 +81,10 @@ public class Player : Unit {
 			_transform.position += (_transform.position - collider.transform.position)/2;
 			curWeapon = 0;
 		}
+		if (collider.gameObject.tag == "BasketBoss")
+		{
+			_transform.position += (_transform.position - collider.transform.position)/2;
+		}
 	}
 
 }
