@@ -3,9 +3,10 @@ using System.Collections;
 
 public class BasketBoss : Unit {
 	public Transform target;
-	Basketball ball;
-	bool ballPossession;
+	public GameObject ballPrefab;
+	public bool ballPossession;
 	int damage;
+	public float nextTargetTime;
 	
 	// Use this for initialization
 	void Start () {
@@ -14,19 +15,31 @@ public class BasketBoss : Unit {
 	
 	// Update is called once per frame
 	void Update () {
-		if( ballPossession && target == null )
+		if (target == null && ballPossession) // ( Time.time > nextTargetTime )
 		{
-			if( UnityEngine.Random.value <= .8f )
+			if( UnityEngine.Random.value <= 1.8f )
 			{
-				Target( "Basketboss" );
-				ballPossession = false;
+				Target( "BasketBoss" );
+				if (target != _transform) {
+					ballPossession = false; // pass ball to another boss
+					RotateUnit();
+					Pass();
+					renderer.material.color = Color.red;
+				}
+				target = null;
 			}
 			else
 			{
+				Debug.Log("DUNK");
 				Target( "Player" );
 			}
+			
 		}
-		Move();
+		if (target == _transform) target = null;
+		if (moveDir != Vector3.zero && target != null){
+			MoveUnit();
+			RotateUnit();
+		}
 	}
 		
 	public void getPos()
@@ -36,14 +49,20 @@ public class BasketBoss : Unit {
 	}
 	
 	protected void Target( string unitTarget ) {
+		Debug.Log (unitTarget);
 		if (target == null) {
-			target = GameObject.FindGameObjectWithTag( unitTarget ).transform; // set player as the target
-		}
-		else {
-			SetDirection (
-				target.position.x - _transform.position.x,
-				target.position.z - _transform.position.z
-			);
+			int targetIndex = Random.Range (0,5);
+			Debug.Log (targetIndex);
+			target = GameObject.FindGameObjectsWithTag( unitTarget )[targetIndex].transform; // set player as the target
+			if (target == _transform) target = null;
+//		}
+//		else {
+			if (target != null) {
+				SetDirection (
+					target.position.x - _transform.position.x,
+					target.position.z - _transform.position.z
+				);
+			}
 		}
 	}
 	
@@ -59,6 +78,11 @@ public class BasketBoss : Unit {
 	//Pass the ball after dunking on that fool
 	void Pass()
 	{
-		Instantiate( ball );
+//		Target( "BasketBoss" );
+		RotateUnit();
+		GameObject ball = Instantiate(ballPrefab, _transform.position + _transform.forward*2, _transform.rotation) as GameObject;
+		Basketball bball = ball.GetComponent<Basketball>();
+		bball.SetTarget (target);
+		target = null;
 	}
 }

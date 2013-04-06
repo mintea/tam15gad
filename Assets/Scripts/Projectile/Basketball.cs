@@ -1,42 +1,40 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
-public class Basketball : MonoBehaviour {
+public class Basketball : Unit {
+	
+	public GameObject drop;
 	public Transform target;
-	public float moveSpeed;
-	public int   damage;
-	public int   piercing;
-	public bool  isPlayer;
-	public float moveAmount;
-	public Vector3 moveDir = Vector3.zero;
+	public int damage = 0;
+	public float dropRate;
 	
-	private Transform _transform;
-	private Vector3 _startPos;	// for debugging
-	private float _killZone;
-	
-	public Color[] colorChoices = {
-		Color.red,
-		new Color(1,0.4f,0), // orange
-		Color.yellow,
-		Color.green,
-		Color.blue,
-		Color.magenta,
-		Color.cyan,
-		Color.white,
-		Color.gray
-	};
-	
-	
-	// Use this for initialization
 	void Start () {
 		_transform = transform;
-		_startPos = _transform.position;
-		_killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Move();
+		
+		Target ( "BasketBoss" );
+		
+		if (moveDir != Vector3.zero){
+			
+			RotateUnit();
+			MoveUnit();
+		}
+	}
+	
+	protected void Target( string unitTarget ) {
+		if (target == null) {
+			target = GameObject.FindGameObjectWithTag( unitTarget ).transform; // set player as the target
+		}
+		else {
+			SetDirection (
+				target.position.x - _transform.position.x,
+				target.position.z - _transform.position.z
+			);
+		}
 	}
 	
 	void OnTriggerEnter( Collider collider )
@@ -52,33 +50,17 @@ public class Basketball : MonoBehaviour {
 			Destroy( gameObject );
 		}
 	}
-	
-	public void Move() {
-		moveAmount = moveSpeed * Time.deltaTime;
-		_transform.Translate (Vector3.forward * moveAmount);
-		Debug.DrawLine (_startPos, _transform.position, Color.grey);
-		
-		//Destroys bullets if it goes out of bounds
-//		if (Vector3.Distance (_transform.position, Vector3.zero) > _killZone)
+
+	public void SetTarget( Transform t) {
+		target = t;
+	}	
+//	void OnTriggerEnter(Collider collider)
+//	{
+//		if (collider.gameObject.tag == "Player")
 //		{
-//			Destroy(gameObject);
+//			KillUnit(); // suicide
+//			collider.GetComponent<Player>().AdjustHealth(-collideDamage);
 //		}
-	}
+//	}
 	
-	protected void Target( string unitTarget ) {
-		if (target == null) {
-			target = GameObject.FindGameObjectWithTag( unitTarget ).transform; // set player as the target
-		}
-		else {
-			SetDirection (
-				target.position.x - _transform.position.x,
-				target.position.z - _transform.position.z
-			);
-		}
-	}
-	
-	protected void SetDirection(float x, float z) {
-		moveDir.x = x;
-		moveDir.z = z;
-	}
 }
