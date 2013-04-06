@@ -25,7 +25,8 @@ public class GameMaster : MonoBehaviour {
 		SetupSpawnPoints(5,5);
 
 		// Spawn Player
-		SpawnPlayer(spawnPoints[Random.Range (0,spawnPoints.Length)], Quaternion.identity);
+//		SpawnPlayer(spawnPoints[Random.Range (0,spawnPoints.Length)], Quaternion.identity);
+		SpawnPlayer(Vector3.zero, Quaternion.identity);
 	}
 	
 	// Update is called once per frame

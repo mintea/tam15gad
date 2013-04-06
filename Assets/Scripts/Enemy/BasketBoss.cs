@@ -7,10 +7,20 @@ public class BasketBoss : Unit {
 	public bool ballPossession;
 	int damage;
 	public float nextTargetTime;
+	public int curCirclePos;
+	bool isDunking;
+	
+	static int posCount = 10;
+	public Vector3[] positions = new Vector3[posCount];
+
 	
 	// Use this for initialization
 	void Start () {
 		_transform = transform;
+		for (int i = 0; i < posCount; ++i) {
+			positions[i].x = 8*Mathf.Cos (i*2*Mathf.PI/posCount);
+			positions[i].z = 8*Mathf.Sin (i*2*Mathf.PI/posCount);
+		}
 	}
 	
 	// Update is called once per frame
@@ -32,16 +42,36 @@ public class BasketBoss : Unit {
 				Debug.Log("DUNK");
 				Target( "Player" );
 				target = null;
+//				isDunking = true;
 			}
 			
 		}
 		if (target == _transform) target = null;
-		if (moveDir != Vector3.zero && target != null){
-			MoveUnit();
+//		if (moveDir != Vector3.zero && target != null){
+		if (isDunking) {
+			// Target( "Player" );
 			RotateUnit();
+			// MoveUnit();
+			// Dunk();
+			// Pass();
+			// isDunking = false;
+		} else {
+			MoveToPos(curCirclePos);
+			RotateUnit();
+			if (moveDir != Vector3.zero)
+//			Debug.Log(Vector3.Distance (_transform.position, moveDir));
+//			if (Vector3.Distance (_transform.position, moveDir) >= 7)
+				MoveUnit();
 		}
 	}
-		
+	
+	public void MoveToPos(int pos) {
+		SetDirection (
+			positions[pos%posCount].x - _transform.position.x,
+			positions[pos%posCount].z - _transform.position.z
+		);
+	}
+	
 	public void getPos()
 	{
 		ballPossession = true;
@@ -87,6 +117,13 @@ public class BasketBoss : Unit {
 //		Target( "BasketBoss" );
 		if (target != _transform) {
 			ballPossession = false; // pass ball to another boss
+			if (target != null) {
+				SetDirection (
+					target.position.x - _transform.position.x,
+					target.position.z - _transform.position.z
+				);
+			}
+			
 			RotateUnit();
 			
 			GameObject ball = Instantiate(ballPrefab, _transform.position + _transform.forward*2, _transform.rotation) as GameObject;
@@ -99,11 +136,12 @@ public class BasketBoss : Unit {
 		target = null;
 	}
 	
-//	Target( "BasketBoss" );
-//				if (target != _transform) {
-//					ballPossession = false; // pass ball to another boss
-//					Pass();
-//					renderer.material.color = Color.red;
-//				}
-//				target = null;
+	public void RotatePosition(int i) {
+		if (i%2==0) {
+			curCirclePos = (curCirclePos+posCount-1)%posCount;
+		}
+		else {
+			curCirclePos = (curCirclePos+1)%posCount;
+		}
+	}
 }
