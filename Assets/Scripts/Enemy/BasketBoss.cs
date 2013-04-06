@@ -5,11 +5,13 @@ public class BasketBoss : Unit {
 	public Transform target;
 	public GameObject ballPrefab;
 	public bool ballPossession;
-	int damage;
-	public float nextTargetTime;
+	public int dunkDamage;
 	public int curCirclePos;
 	bool isDunking;
 	public int myIndex;
+	
+	public GameObject drop;
+	float dropRate = .5f;
 	
 	static int posCount = 10;
 	public Vector3[] positions = new Vector3[posCount];
@@ -24,6 +26,8 @@ public class BasketBoss : Unit {
 		}
 		if (ballPossession) {
 			renderer.material.color = Color.blue;
+			ballPossession = false;
+			StartCoroutine("WaitPass");
 		} else {
 			renderer.material.color = Color.red;
 		}
@@ -35,13 +39,9 @@ public class BasketBoss : Unit {
 		{
 			if( UnityEngine.Random.value <= .8f )
 			{
-				Target( "BasketBoss" );
-				if (target != _transform) {
-					ballPossession = false; // pass ball to another boss
-					StartCoroutine("WaitPass");
-//					Pass ();
-				}
-//				target = null;
+//				Target( "BasketBoss" );
+				ballPossession = false; // pass ball to another boss
+				StartCoroutine("WaitPass");
 			}
 			else if (!isDunking)
 			{
@@ -100,7 +100,6 @@ public class BasketBoss : Unit {
 			} while (targets[targetIndex].transform == _transform);
 			Debug.Log (unitTarget + ": " +targetIndex);
 			target = targets[targetIndex].transform; // set player as the target
-			if (target == _transform) target = null; // clear target if it's itself
 //		}
 //		else {
 			if (target != null) {
@@ -115,24 +114,32 @@ public class BasketBoss : Unit {
 
 	void OnTriggerEnter( Collider collider )
 	{
-		if (collider.gameObject.tag == "Player")
+		if (collider.gameObject.tag == "Player" && isDunking)
 		{
-			collider.GetComponent<Player>().AdjustHealth( -damage );
 			// dunk
+			collider.GetComponent<Player>().AdjustHealth( -dunkDamage );
 			isDunking = false;
 			target=null;
-//			Pass ();
-			ballPossession=false;
-//			Pass();
-//			StartCoroutine("WaitPass");
+		}
+		else if (collider.gameObject.tag == "Projectile")
+		{
+			if (isDunking) {
+				isDunking = false;
+				target=null;
+				ballPossession=false;
+				Pass ();
+				if (UnityEngine.Random.value <= dropRate) {
+					Instantiate(drop,_transform.position, Quaternion.identity);
+				}
+			}
 		}
 	}
 //	
 	void OnTriggerExit( Collider collider )
 	{
-		if (collider.gameObject.tag == "Player")
+		if (collider.gameObject.tag == "Player" && ballPossession)
 		{
-//			StartCoroutine("WaitPass");
+			ballPossession=false;
 			Pass ();
 		}
 	}
@@ -146,26 +153,27 @@ public class BasketBoss : Unit {
 	void Pass()
 	{
 		Debug.Log("PASS");
-//		Target( "BasketBoss" );
-		if (target != _transform) {
-			if (target != null) {
-				SetDirection (
-					target.position.x - _transform.position.x,
-					target.position.z - _transform.position.z
-				);
-			}
-			
-			RotateUnit();
-			
-			ballPossession = false; // pass ball to another boss
-			GameObject ball = Instantiate(ballPrefab, _transform.position + _transform.forward*2, _transform.rotation) as GameObject;
-			Basketball bball = ball.GetComponent<Basketball>();
-			if (target != null && target.transform.tag == "BasketBoss")
-				bball.SetTarget (target);
-			
-			target = null;
-			renderer.material.color = Color.red;
+		Target( "BasketBoss" );
+		
+//		if (target != _transform) {
+		if (target != null) {
+			SetDirection (
+				target.position.x - _transform.position.x,
+				target.position.z - _transform.position.z
+			);
 		}
+		
+		RotateUnit();
+		
+		ballPossession = false; // pass ball to another boss
+		GameObject ball = Instantiate(ballPrefab, _transform.position + _transform.forward*2, _transform.rotation) as GameObject;
+		Basketball bball = ball.GetComponent<Basketball>();
+		if (target != null && target.transform.tag == "BasketBoss")
+			bball.SetTarget (target);
+		
+//			target = null;
+		renderer.material.color = Color.red;
+//		}
 		target = null;
 	}
 	

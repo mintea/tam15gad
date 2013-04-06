@@ -30,7 +30,7 @@ public class Projectile : MonoBehaviour {
 		_transform = transform;
 		_startPos = _transform.position;
 		_killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
-		Debug.Log( _killZone );
+//		Debug.Log( _killZone );
 //		InvokeRepeating("ChangeColor",0,0.25f);
 	}
 	
@@ -64,7 +64,7 @@ public class Projectile : MonoBehaviour {
 		Unit unit = collider.gameObject.GetComponent<Unit>();
 		
 		if (unit != null) {
-			if ((isPlayer && unit.tag=="Enemy")||(!isPlayer && unit.tag=="Player")) {
+			if ((isPlayer && unit.tag=="Enemy")||(!isPlayer && unit.tag=="Player")||(!isPlayer && unit.tag=="BasketBoss")) {
 				unit.AdjustHealth(-damage);
 				if (--piercing < 0) {
 					Destroy(gameObject);

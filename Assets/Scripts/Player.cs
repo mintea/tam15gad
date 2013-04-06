@@ -76,14 +76,10 @@ public class Player : Unit {
 	
 	void OnTriggerEnter(Collider collider)
 	{
-		if (collider.gameObject.tag == "Enemy")
+		if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "BasketBoss")
 		{
 			_transform.position += (_transform.position - collider.transform.position)/2;
 			curWeapon = 0;
-		}
-		if (collider.gameObject.tag == "BasketBoss")
-		{
-			_transform.position += (_transform.position - collider.transform.position)/2;
 		}
 	}
 

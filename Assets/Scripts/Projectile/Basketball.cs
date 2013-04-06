@@ -4,13 +4,15 @@ using System;
 
 public class Basketball : Unit {
 	
-	public GameObject drop;
+//	public GameObject drop;
+	public BasketBossManager manager;
 	public Transform target;
 	public int damage = 0;
 	public float dropRate;
 	
 	void Start () {
 		_transform = transform;
+		manager = GameObject.Find("Main Camera").GetComponent<BasketBossManager>();
 	}
 	
 	// Update is called once per frame
@@ -42,25 +44,22 @@ public class Basketball : Unit {
 		if (collider.gameObject.tag == "Player")
 		{
 			collider.GetComponent<Player>().AdjustHealth( -damage );
-			Target( "BasketBoss" );
+//			Target( "BasketBoss" );
 		}
 		else if( collider.gameObject.tag == "BasketBoss" )
 		{
 			collider.GetComponent<BasketBoss>().getPos();
 			Destroy( gameObject );
 		}
+		else if( collider.gameObject.tag == "Projectile" )
+		{
+			manager.AdjustBallHealth(-collider.GetComponent<Projectile>().damage);
+			if (manager.isDead) Destroy( gameObject );
+		}
 	}
 
 	public void SetTarget( Transform t) {
 		target = t;
 	}	
-//	void OnTriggerEnter(Collider collider)
-//	{
-//		if (collider.gameObject.tag == "Player")
-//		{
-//			KillUnit(); // suicide
-//			collider.GetComponent<Player>().AdjustHealth(-collideDamage);
-//		}
-//	}
 	
 }
