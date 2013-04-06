@@ -16,6 +16,9 @@ public class GameMaster : MonoBehaviour {
 	
 	public int lives;
 	
+	public int killCount;
+	public int killsToNextLevel;
+	
 
 	// Use this for initialization
 	void Start () {
@@ -110,6 +113,13 @@ public class GameMaster : MonoBehaviour {
 		
 		viewHeight = 2*cam.orthographicSize;	// caches the view's height
 		viewWidth = viewHeight*cam.aspect;		// caches the view's width;
+	}
+	
+	public void IncrementKillCount(){
+		++killCount;
+		if (killCount >= killsToNextLevel) {
+			Application.LoadLevel("Level2"); // load losing screen
+		}
 	}
 		
 }

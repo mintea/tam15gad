@@ -38,7 +38,13 @@ public class BasketBossManager : MonoBehaviour {
 			for (int i = 4; i >= 0; --i) {
 				isDead = true;
 				ballers[i].KillUnit();
+				StartCoroutine("WaitWin");
 			}
 		}
+	}
+	
+	IEnumerator WaitWin() {
+		yield return new WaitForSeconds(2);
+		Application.LoadLevel("Win");
 	}
 }

@@ -11,6 +11,7 @@ public class Projectile : MonoBehaviour {
 	private Transform _transform;
 	private Vector3 _startPos;	// for debugging
 	private float _killZone;
+	private GameMaster _gm;
 	
 	public Color[] colorChoices = {
 		Color.red,
@@ -29,7 +30,8 @@ public class Projectile : MonoBehaviour {
 	void Awake() {
 		_transform = transform;
 		_startPos = _transform.position;
-		_killZone = Camera.main.GetComponent<GameMaster>().viewWidth * 2;
+		_gm = Camera.main.GetComponent<GameMaster>();
+		_killZone = _gm.viewWidth * 2;
 //		Debug.Log( _killZone );
 //		InvokeRepeating("ChangeColor",0,0.25f);
 	}
@@ -66,6 +68,9 @@ public class Projectile : MonoBehaviour {
 		if (unit != null) {
 			if ((isPlayer && unit.tag=="Enemy")||(!isPlayer && unit.tag=="Player")||(!isPlayer && unit.tag=="BasketBoss")) {
 				unit.AdjustHealth(-damage);
+				if (isPlayer || unit == null) {
+					_gm.IncrementKillCount();
+				}
 				if (--piercing < 0) {
 					Destroy(gameObject);
 				}
