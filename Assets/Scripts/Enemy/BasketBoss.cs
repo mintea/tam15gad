@@ -94,7 +94,10 @@ public class BasketBoss : Unit {
 	protected void Target( string unitTarget ) {
 		if (target == null) {
 			GameObject[] targets = GameObject.FindGameObjectsWithTag( unitTarget );
-			int targetIndex = Random.Range (0,targets.Length);
+			int targetIndex;
+			do {
+				targetIndex = Random.Range (0,targets.Length);
+			} while (targets[targetIndex].transform == _transform);
 			Debug.Log (unitTarget + ": " +targetIndex);
 			target = targets[targetIndex].transform; // set player as the target
 			if (target == _transform) target = null; // clear target if it's itself
