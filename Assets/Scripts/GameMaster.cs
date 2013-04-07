@@ -29,14 +29,21 @@ public class GameMaster : MonoBehaviour {
 
 		// Spawn Player
 //		SpawnPlayer(spawnPoints[Random.Range (0,spawnPoints.Length)], Quaternion.identity);
-		SpawnPlayer(Vector3.zero, Quaternion.identity);
+		if( Application.loadedLevel == 0 ){
+			Debug.Log("Start of game spawn");
+			SpawnPlayer(Vector3.zero, Quaternion.identity);
+		}
+		Debug.Log( Application.loadedLevel + ", " + player == null );
+		DontDestroyOnLoad( player );
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
-		if (player == null) {
+//		Debug.Log( "update " + player == null );
+		if (player == null && GameObject.FindGameObjectWithTag("Player") == null) {
+			Debug.Log( "player is null" );
 			if (lives-- > 0) {
+				Debug.Log("Revive Spawn");
 				SpawnPlayer(spawnPoints[Random.Range (0,spawnPoints.Length)], Quaternion.identity);
 				return;
 			} else {
@@ -115,10 +122,12 @@ public class GameMaster : MonoBehaviour {
 		viewWidth = viewHeight*cam.aspect;		// caches the view's width;
 	}
 	
-	public void IncrementKillCount(){
+	public void IncrementKillCount( Collider collider ){
 		++killCount;
 		if (killCount >= killsToNextLevel) {
 			Application.LoadLevel("Level2"); // load losing screen
+//			player = GameObject.FindGameObjectWithTag( "Player" );
+//			Debug.Log( player == null );
 		}
 	}
 		

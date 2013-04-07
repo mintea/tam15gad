@@ -74,6 +74,11 @@ public class Player : Unit {
 		curWeapon = weap;
 	}
 	
+	public void DropWeap()
+	{
+		curWeapon = 0;
+	}
+	
 	void OnTriggerEnter(Collider collider)
 	{
 		if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "BasketBoss")

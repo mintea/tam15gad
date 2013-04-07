@@ -69,7 +69,11 @@ public class Projectile : MonoBehaviour {
 			if ((isPlayer && unit.tag=="Enemy")||(!isPlayer && unit.tag=="Player")||(!isPlayer && unit.tag=="BasketBoss")) {
 				unit.AdjustHealth(-damage);
 				if (isPlayer || unit == null) {
-					_gm.IncrementKillCount();
+					_gm.IncrementKillCount( collider );
+				}
+				if (!isPlayer && unit.tag == "Player"){
+					Player player = collider.gameObject.GetComponent<Player>();
+					player.DropWeap();
 				}
 				if (--piercing < 0) {
 					Destroy(gameObject);

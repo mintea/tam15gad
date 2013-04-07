@@ -45,7 +45,7 @@ public class BasketBoss : Unit {
 			}
 			else if (!isDunking)
 			{
-				Debug.Log("DUNK");
+//				Debug.Log("DUNK");
 				Target( "Player" );
 				isDunking = true;
 			}
@@ -98,7 +98,7 @@ public class BasketBoss : Unit {
 			do {
 				targetIndex = Random.Range (0,targets.Length);
 			} while (targets[targetIndex].transform == _transform);
-			Debug.Log (unitTarget + ": " +targetIndex);
+//			Debug.Log (unitTarget + ": " +targetIndex);
 			target = targets[targetIndex].transform; // set player as the target
 //		}
 //		else {
@@ -152,7 +152,7 @@ public class BasketBoss : Unit {
 	//Pass the ball after dunking on that fool
 	void Pass()
 	{
-		Debug.Log("PASS");
+//		Debug.Log("PASS");
 		Target( "BasketBoss" );
 		
 //		if (target != _transform) {
